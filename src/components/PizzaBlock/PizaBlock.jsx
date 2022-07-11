@@ -17,13 +17,13 @@ function PizaBlock(props){
             <div className='pizza-block__selector'>
                 <ul>
                     {props.types.map((typeId, i) => (
-                        <li key={typeId} onClick={() => (setActiveType(i))} className={activeType == i ? 'active' : ''}>{typeNames[typeId]}</li>
+                        <li key={typeId} onClick={() => {setActiveType(i)}} className={activeType == i ? 'active' : ''}>{typeNames[typeId]}</li>
                     ))}
                 </ul>
                 <ul>
                     {
                         props.sizes.map((size, i) => (
-                            <li key={size} onClick={() => (setActiveSize(i))} className={activeSize == i ? 'active' : ''}>{size} см.</li>
+                            <li key={size} onClick={() => {setActiveSize(i)}} className={activeSize == i ? 'active' : ''}>{size} см.</li>
                         ))
                     }
                 </ul>
