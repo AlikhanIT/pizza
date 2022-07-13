@@ -1,21 +1,35 @@
 import {useState} from "react";
 
-function Sort(){
+function Sort(props){
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState(0);
 
-    const list = ['популяронсти', 'цене', 'алфавиту'];
-    let sortName = list[selected];
+    const list = [{
+        sortName: 'популяронсти',
+        activeProp: 0,
+        sortProp: 'rating',
+        sortMath: true
+    },{
+        sortName: 'цене',
+        activeProp: 1,
+        sortProp: 'price',
+        sortMath: true
+    },{
+        sortName: 'алфавиту',
+        activeProp: 2,
+        sortProp: 'title',
+        sortMath: true
+    }]
+    let sortName = list[props.sortProps.activeProp].sortName;
 
-    const onClickSortName = (index) => {
-      setSelected(index);
-      setOpen(!open);
+    const onClickSortName = (val) => {
+        props.onChangeSort(val);
+        setOpen(!open);
     };
 
     return(
         <div className='sort'>
             <div className='sort__label'>
-                <svg
+                <svg onClick={() => (props.onChangeSortMath())}
                     width='10'
                     height='6'
                     viewBox='0 0 10 6'
@@ -34,7 +48,7 @@ function Sort(){
                 open && (<div className='sort__popup'>
                     <ul>
                         {list.map((value, index) =>(
-                            <li key={index} onClick={() => onClickSortName(index)} className={selected == index ? 'active' : ''}>{value}</li>
+                            <li key={index} onClick={() => onClickSortName(value)} className={props.sortProps.activeProp === index ? 'active' : ''}>{value.sortName}</li>
                         ))}
                     </ul>
                 </div>)
