@@ -1,35 +1,39 @@
 import {useState} from "react";
+import { setSortProperty, setSortMath } from "../redux/slices/filterSlice";
+import {useDispatch, useSelector} from "react-redux";
+
+
+export const sortList = [{
+    sortName: 'популяронсти',
+    activeProp: 0,
+    sortProp: 'rating',
+    sortMath: true
+},{
+    sortName: 'цене',
+    activeProp: 1,
+    sortProp: 'price',
+    sortMath: true
+},{
+    sortName: 'алфавиту',
+    activeProp: 2,
+    sortProp: 'title',
+    sortMath: true
+}]
 
 function Sort(props){
+    const sortProps = useSelector(state => state.filterReducer.sortProperties);
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-
-    const list = [{
-        sortName: 'популяронсти',
-        activeProp: 0,
-        sortProp: 'rating',
-        sortMath: true
-    },{
-        sortName: 'цене',
-        activeProp: 1,
-        sortProp: 'price',
-        sortMath: true
-    },{
-        sortName: 'алфавиту',
-        activeProp: 2,
-        sortProp: 'title',
-        sortMath: true
-    }]
-    let sortName = list[props.sortProps.activeProp].sortName;
+    let sortName = sortList[sortProps.activeProp].sortName;
 
     const onClickSortName = (val) => {
-        props.onChangeSort(val);
+        dispatch(setSortProperty(val));
         setOpen(!open);
     };
-
     return(
         <div className='sort'>
             <div className='sort__label'>
-                <svg onClick={() => (props.onChangeSortMath())}
+                <svg onClick={() => (dispatch(setSortMath()))}
                     width='10'
                     height='6'
                     viewBox='0 0 10 6'
@@ -47,8 +51,8 @@ function Sort(props){
             {
                 open && (<div className='sort__popup'>
                     <ul>
-                        {list.map((value, index) =>(
-                            <li key={index} onClick={() => onClickSortName(value)} className={props.sortProps.activeProp === index ? 'active' : ''}>{value.sortName}</li>
+                        {sortList.map((value, index) =>(
+                            <li key={index} onClick={() => (onClickSortName(value)) } className={sortProps.activeProp === index ? 'active' : ''}>{value.sortName}</li>
                         ))}
                     </ul>
                 </div>)

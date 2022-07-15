@@ -1,49 +1,65 @@
 import Categories from "../components/Categories";
-import Sort from "../components/Sort";
+import Sort, {sortList} from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizaBlock from "../components/PizzaBlock";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import Pagination from "../components/Pagination";
 import {SearchContext} from "../App";
+import {useDispatch, useSelector} from "react-redux";
+import { setPageCount, setFilters } from "../components/redux/slices/filterSlice";
+import { useNavigate } from "react-router-dom";
+import qs from 'qs'
+import axios from "axios";
 
 function Home(){
-    const [activeCategory, setActiveCategory] = useState(0);
     const [items, setItems] = useState([]);
-    const [sortProperties, setSortProperties] = useState({
-        activeProp: 0,
-        sortProp: 'rating',
-        sortMath: true
-    });
     const [isLoading, setIsLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageCount, setPageCount] = useState(3);
+    const { activeCategory, sortProperties, currentPage } = useSelector(state => state.filterReducer)
     const {searchBy} = useContext(SearchContext);
 
-    const onChangeCategory = (i) => {
-        setActiveCategory(i);
-    }
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const onChangeSort = (i) => {
-        setSortProperties(i);
-    }
+    const isFirstRequest = useRef(false);
+    const isSearch = useRef(false);
 
-    const onChangeSortMath = () => {
-        setSortProperties({...sortProperties, sortMath: !sortProperties.sortMath});
-    }
-
-    useEffect(() => {
+    const fetchPizzas = () => {
         setIsLoading(true)
-        fetch(`https://62cc4d0ca080052930a9357f.mockapi.io/items?${activeCategory > 0 ? `category=${activeCategory}` : ''}&${searchBy !== undefined ? `title=${searchBy}` : ''}&sortBy=${sortProperties.sortProp}&order=${sortProperties.sortMath === true ? 'desc' : 'asc'}&p=${currentPage}&l=4`).then((response) => {
-            return response.json();
-        }).then((json) => {
-            setItems(json);
+        axios.get(`https://62cc4d0ca080052930a9357f.mockapi.io/items?${activeCategory > 0 ? `category=${activeCategory}` : ''}&${searchBy !== undefined ? `title=${searchBy}` : ''}&sortBy=${sortProperties.sortProp}&order=${sortProperties.sortMath === true ? 'desc' : 'asc'}&page=${currentPage}&limit=4`).then((res) => {
+            setItems(res.data);
             setIsLoading(false);
         });
-        fetch(`https://62cc4d0ca080052930a9357f.mockapi.io/items?${activeCategory > 0 ? `category=${activeCategory}` : ''}&${searchBy !== undefined ? `title=${searchBy}` : ''}&sortBy=${sortProperties.sortProp}&order=${sortProperties.sortMath === true ? 'desc' : 'asc'}`).then((response) => {
-            return response.json();
-        }).then((json) => {
-            setPageCount(json.length);
+        axios.get(`https://62cc4d0ca080052930a9357f.mockapi.io/items?${activeCategory > 0 ? `category=${activeCategory}` : ''}&${searchBy !== undefined ? `title=${searchBy}` : ''}&sortBy=${sortProperties.sortProp}&order=${sortProperties.sortMath === true ? 'desc' : 'asc'}`).then((res) => {
+            dispatch(setPageCount(res.data.length));
         });
+    };
+
+    useEffect(() => {
+        if(isFirstRequest.current) {
+            const queryString = qs.stringify({
+                sortProperties: sortProperties.sortProp,
+                activeCategory,
+                currentPage
+            });
+            navigate(`?${queryString}`);
+        }
+        isFirstRequest.current = true;
+    }, [activeCategory, sortProperties, searchBy, currentPage])
+
+    useEffect(() => {
+        if(window.location.search) {
+            const params = qs.parse(window.location.search.substring(1));
+            const sort = sortList.find((obj) => obj.sortProp === params.sortProperties);
+            dispatch(setFilters({ ...params, sortProperties: sort}));
+            isSearch.current = true;
+        }
+    }, [])
+
+    useEffect(() => {
+        if(!isSearch.current){
+            fetchPizzas();
+        }
+        isSearch.current = false
         window.scrollTo(0, 0);
     }, [activeCategory, sortProperties, searchBy, currentPage])
 
@@ -54,8 +70,8 @@ function Home(){
         <>
             <div className="container">
                 <div className='content__top'>
-                    <Categories categoryIndex={activeCategory} onChangeCategory={onChangeCategory}/>
-                    <Sort sortProps={sortProperties} onChangeSort={(i) => onChangeSort(i)} onChangeSortMath={() => onChangeSortMath()}/>
+                    <Categories />
+                    <Sort />
                 </div>
                 <h2 className='content__title'>Все пиццы</h2>
                 <div className='content__items'>
@@ -66,7 +82,7 @@ function Home(){
                     }
                 </div>
             </div>
-            <Pagination onChangePage={(setCurrentPage)} pageCount={pageCount} />
+            <Pagination />
         </>
     )
 }
