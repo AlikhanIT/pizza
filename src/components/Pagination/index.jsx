@@ -5,7 +5,7 @@ import {setCurrentPage} from "../redux/slices/filterSlice";
 
 const Pagination = () => {
     const { currentPage } = useSelector(state => state.filterReducer)
-    const pageCount = useSelector(state => state.filterReducer.pageCount)
+    const pageCount = useSelector(state => state.pizzaReducer.pageCount)
     const dispatch = useDispatch();
 
     return(

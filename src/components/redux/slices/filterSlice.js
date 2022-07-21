@@ -8,7 +8,6 @@ const initialState = {
         sortMath: true
     },
     currentPage: 1,
-    pageCount: 3,
 }
 
 export const filterSlice = createSlice({
@@ -28,9 +27,6 @@ export const filterSlice = createSlice({
         setCurrentPage: (state, action) => {
             state.currentPage = action.payload;
         },
-        setPageCount: (state, action) => {
-            state.pageCount = action.payload;
-        },
         setFilters: (state, action) => {
             state.activeCategory = action.payload.activeCategory;
             state.sortProperties = action.payload.sortProperties;
@@ -39,6 +35,6 @@ export const filterSlice = createSlice({
     },
 })
 
-export const { setActiveCategory, setSortProperty, setSortMath, setCurrentPage, setPageCount, setFilters } = filterSlice.actions
+export const { setActiveCategory, setSortProperty, setSortMath, setCurrentPage, setFilters } = filterSlice.actions
 
 export default filterSlice.reducer
