@@ -2,22 +2,23 @@ import Categories from "../components/Categories";
 import Sort, {sortList} from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizaBlock from "../components/PizzaBlock";
-import {useContext, useEffect, useRef } from "react";
+import {useEffect, useRef } from "react";
 import Pagination from "../components/Pagination";
-import {SearchContext} from "../App";
+// import {SearchContext} from "../App";
 import {useDispatch, useSelector} from "react-redux";
-import { setFilters } from "../components/redux/slices/filterSlice";
-import { useNavigate } from "react-router-dom";
-import { fetchPizzas } from "../components/redux/slices/pizzaSlice";
-import qs from 'qs'
+import {getFilterData, setFilters} from "../components/redux/slices/filterSlice";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {fetchPizzas, getPizzaData} from "../components/redux/slices/pizzaSlice";
 
 function Home(){
-    const { items, isLoading } = useSelector(state => state.pizzaReducer)
-    const { activeCategory, sortProperties, currentPage } = useSelector(state => state.filterReducer)
-    const {searchBy} = useContext(SearchContext);
+    const { items, isLoading } = useSelector(getPizzaData)
+    const { activeCategory, sortProperties, currentPage, searchBy } = useSelector(getFilterData)
+    // const {searchBy} = useContext(SearchContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const params = useParams();
+    const location = useLocation();
 
     const isFirstRequest = useRef(false);
     const isSearch = useRef(false);
@@ -31,21 +32,15 @@ function Home(){
 
     useEffect(() => {
         if(isFirstRequest.current) {
-            const queryString = qs.stringify({
-                sortProperties: sortProperties.sortProp,
-                activeCategory,
-                currentPage
-            });
-            navigate(`?${queryString}`);
+            navigate(`/${sortProperties.sortProp}/${activeCategory}/${currentPage}`);
         }
         isFirstRequest.current = true;
-    }, [])
+    }, [activeCategory, sortProperties, searchBy, currentPage, navigate])
 
     useEffect(() => {
-        if(window.location.search) {
-            const params = qs.parse(window.location.search.substring(1));
-            const sort = sortList.find((obj) => obj.sortProp === params.sortProperties);
-            dispatch(setFilters({ ...params, sortProperties: sort}));
+        if(location.pathname !== '/') {
+            const sort = sortList.find((obj) => obj.sortProp === params.sortProperty);
+            dispatch(setFilters({ ...params, sortProperty: sort}));
             isSearch.current = true;
         }
     }, [])
@@ -69,16 +64,16 @@ function Home(){
                     <Sort />
                 </div>
                 <h2 className='content__title'>Все пиццы</h2>
-                <div className='content__items'>
-                    {isLoading === 'error' ? (
-                        <div className="content__error-info">
-                            <h2>Произошла ошибка 😕</h2>
-                            <p>К сожалению, не удалось получить питсы. Попробуйте повторить попытку позже.</p>
-                        </div>
-                    ) : (
+                {isLoading === 'error' ? (
+                    <div className="content__error-info">
+                        <h2>Произошла ошибка 😕</h2>
+                        <p>К сожалению, не удалось получить пиццы. Попробуйте повторить попытку позже.</p>
+                    </div>
+                ) : (
+                    <div className='content__items'>
                         <>{isLoading === 'loading' ? skeletons : pizzas}</>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
             <Pagination />
         </>

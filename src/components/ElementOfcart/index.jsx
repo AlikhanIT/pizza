@@ -1,10 +1,10 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {addPizza, minusPizza, clearPizzas} from "../redux/slices/cartSlice";
+import {addPizza, minusPizza, clearPizzas, getItemCount} from "../redux/slices/cartSlice";
 
 const ElementOfCart = ({ id, imageUrl, title,  types, sizes, price }) => {
     const dispatch = useDispatch();
-    const countOfItem = useSelector(state => state.cartReducer.items.find((obj) => (obj.id ===id)));
+    const countOfItem = useSelector(getItemCount(id));
 
     return(
         <div className="cart__item">
@@ -45,7 +45,7 @@ const ElementOfCart = ({ id, imageUrl, title,  types, sizes, price }) => {
                 </div>
             </div>
             <div className="cart__item-price">
-                <b>{price} ₽</b>
+                <b>{price * countOfItem.count} ₸</b>
             </div>
             <div className="cart__item-remove">
                 <div onClick={() => (dispatch(clearPizzas({ id })))} className="button button--outline button--circle">

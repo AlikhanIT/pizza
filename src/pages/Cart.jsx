@@ -3,10 +3,10 @@ import {Link} from "react-router-dom";
 import EmptyCart from "./EmptyCart";
 import ElementOfcart from "../components/ElementOfcart";
 import {useDispatch, useSelector} from "react-redux";
-import {allClear} from "../components/redux/slices/cartSlice";
+import {allClear, getCartData} from "../components/redux/slices/cartSlice";
 
 const Cart = () => {
-    const { totalPrice, items, totalCount } = useSelector(state => state.cartReducer)
+    const { totalPrice, items, totalCount } = useSelector(getCartData)
     const dispatch = useDispatch()
 
     if(!totalCount) {
@@ -58,7 +58,7 @@ const Cart = () => {
                 <div className="cart__bottom">
                     <div className="cart__bottom-details">
                         <span> Всего пицц: <b>{totalCount} шт.</b> </span>
-                        <span> Сумма заказа: <b>{totalPrice} ₽</b> </span>
+                        <span> Сумма заказа: <b>{totalPrice} ₸</b> </span>
                     </div>
                     <div className="cart__bottom-buttons">
                         <Link to="/" className="button button--outline button--add go-back-btn">

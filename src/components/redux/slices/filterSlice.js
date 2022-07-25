@@ -8,6 +8,7 @@ const initialState = {
         sortMath: true
     },
     currentPage: 1,
+    searchBy: '',
 }
 
 export const filterSlice = createSlice({
@@ -28,13 +29,21 @@ export const filterSlice = createSlice({
             state.currentPage = action.payload;
         },
         setFilters: (state, action) => {
-            state.activeCategory = action.payload.activeCategory;
-            state.sortProperties = action.payload.sortProperties;
-            state.currentPage = action.payload.currentPage;
+            state.activeCategory = +action.payload.activeCateg;
+            state.sortProperties = action.payload.sortProperty;
+            state.currentPage = +action.payload.curPage;
+            console.log(state.activeCategory)
+        },
+        setSearchBy: (state, action) => {
+          state.searchBy = action.payload;
         },
     },
 })
 
-export const { setActiveCategory, setSortProperty, setSortMath, setCurrentPage, setFilters } = filterSlice.actions
+export const getFilterData = (state) => {
+    return state.filterReducer;
+}
+
+export const { setActiveCategory, setSortProperty, setSortMath, setCurrentPage, setFilters, setSearchBy } = filterSlice.actions
 
 export default filterSlice.reducer

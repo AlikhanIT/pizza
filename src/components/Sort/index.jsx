@@ -66,7 +66,7 @@ function Sort(props){
                 open && (<div className='sort__popup'>
                     <ul>
                         {sortList.map((value, index) =>(
-                            <li key={index} onClick={() => (onClickSortName(value)) } className={sortProps.activeProp === index ? 'active' : ''}>{value.sortName}</li>
+                            <li key={index} onClick={() => (onClickSortName(value)) } className={+sortProps.activeProp === index ? 'active' : ''}>{value.sortName}</li>
                         ))}
                     </ul>
                 </div>)

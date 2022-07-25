@@ -43,6 +43,13 @@ export const cartSlice = createSlice({
     },
 })
 
+export const getCartData = (state) => {
+    return state.cartReducer;
+}
+export const getItemCount = (id) => (state) => {
+    return state.cartReducer.items.find((obj) => (obj.id ===id));
+}
+
 export const { addPizza, clearPizzas, minusPizza, allClear } = cartSlice.actions
 
 export default cartSlice.reducer
