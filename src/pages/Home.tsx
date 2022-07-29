@@ -4,16 +4,25 @@ import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizaBlock from "../components/PizzaBlock";
 import {useEffect, useRef } from "react";
 import Pagination from "../components/Pagination";
-// import {SearchContext} from "../App";
 import {useDispatch, useSelector} from "react-redux";
-import {getFilterData, setFilters} from "../components/redux/slices/filterSlice";
+import {getFilterData, setFilters, TypeOfNavigate} from "../components/redux/slices/filterSlice";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {fetchPizzas, getPizzaData} from "../components/redux/slices/pizzaSlice";
 
-function Home(){
+type Item = {
+    title: string,
+    id: string,
+    imageUrl: string,
+    types: number[],
+    sizes: number[],
+    price: number,
+    category: number,
+    rating: number,
+}
+
+const Home: React.FC = () => {
     const { items, isLoading } = useSelector(getPizzaData)
     const { activeCategory, sortProperties, currentPage, searchBy } = useSelector(getFilterData)
-    // const {searchBy} = useContext(SearchContext);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,6 +34,7 @@ function Home(){
 
     const getPizzas = () => {
         dispatch(
+            // @ts-ignore
             fetchPizzas({ activeCategory, searchBy, sortProperties, currentPage })
         )
         window.scrollTo(0, 0);
@@ -40,7 +50,10 @@ function Home(){
     useEffect(() => {
         if(location.pathname !== '/') {
             const sort = sortList.find((obj) => obj.sortProp === params.sortProperty);
-            dispatch(setFilters({ ...params, sortProperty: sort}));
+            if(sort){
+                const _params = { ...params, sortProperty: sort}
+                dispatch(setFilters(_params as TypeOfNavigate));
+            }
             isSearch.current = true;
         }
     }, [])
@@ -53,8 +66,8 @@ function Home(){
         window.scrollTo(0, 0);
     }, [activeCategory, sortProperties, searchBy, currentPage])
 
-    const skeletons = [...new Array(4)].map((value, index) => (<Skeleton key={index} />));
-    const pizzas = items.map((obj) => (<PizaBlock key={obj.id} {...obj} />));
+    const skeletons = [...new Array(4)].map((_, index: number) => (<Skeleton key={index} />));
+    const pizzas = items.map((obj: Item) => (<PizaBlock key={obj.id} {...obj} />));
 
     return(
         <>

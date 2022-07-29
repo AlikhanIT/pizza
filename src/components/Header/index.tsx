@@ -2,12 +2,11 @@ import logoSvg from '../../assets/img/pizza-logo.svg'
 import {Link, useLocation} from "react-router-dom";
 import Search from "../Search";
 import {useSelector} from "react-redux";
-import {getPizzaData} from "../redux/slices/pizzaSlice";
 import {getCartData} from "../redux/slices/cartSlice";
+import React from "react";
 
-function Header(){
+const Header: React.FC = () => {
     const { totalPrice, totalCount } = useSelector(getCartData);
-    const { currency } = useSelector(getPizzaData);
 
     const location = useLocation();
 

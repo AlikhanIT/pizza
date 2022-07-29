@@ -1,8 +1,8 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {addPizza, minusPizza, clearPizzas, getItemCount} from "../redux/slices/cartSlice";
+import {addPizzaInCart, minusPizza, clearPizzas, getItemCount, Items} from "../redux/slices/cartSlice";
 
-const ElementOfCart = ({ id, imageUrl, title,  types, sizes, price }) => {
+const ElementOfCart: React.FC<Items> = ({ id, imageUrl, title,  types, sizes, price }) => {
     const dispatch = useDispatch();
     const countOfItem = useSelector(getItemCount(id));
 
@@ -30,8 +30,8 @@ const ElementOfCart = ({ id, imageUrl, title,  types, sizes, price }) => {
                     </svg>
 
                 </div>
-                <b>{countOfItem.count}</b>
-                <div onClick={() => (dispatch(addPizza({id, price})))} className="button button--outline button--circle cart__item-count-plus">
+                <b>{countOfItem?.count}</b>
+                <div onClick={() => (dispatch(addPizzaInCart({id, price})))} className="button button--outline button--circle cart__item-count-plus">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -45,7 +45,7 @@ const ElementOfCart = ({ id, imageUrl, title,  types, sizes, price }) => {
                 </div>
             </div>
             <div className="cart__item-price">
-                <b>{price * countOfItem.count} ₸</b>
+                <b>{countOfItem && countOfItem.count && (countOfItem.count * price)} ₸</b>
             </div>
             <div className="cart__item-remove">
                 <div onClick={() => (dispatch(clearPizzas({ id })))} className="button button--outline button--circle">

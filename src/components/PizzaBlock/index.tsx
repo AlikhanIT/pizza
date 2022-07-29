@@ -1,11 +1,20 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {addPizza, getItemCount} from "../redux/slices/cartSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {getPizzaData} from "../redux/slices/pizzaSlice";
 
-function PizaBlock({ imageUrl, title,  types, sizes, price, id }){
-    const [activeType, setActiveType] = useState(0);
-    const [activeSize, setActiveSize] = useState(0);
+type PizzaItem = {
+    title: string,
+    id: string,
+    imageUrl: string,
+    types: number[],
+    sizes: number[],
+    price: number,
+}
+
+const PizaBlock: React.FC<PizzaItem> = ({ imageUrl, title,  types, sizes, price, id }) => {
+    const [activeType, setActiveType] = useState<number>(0);
+    const [activeSize, setActiveSize] = useState<number>(0);
     const itemCount = useSelector(getItemCount(id))
     const { currency } = useSelector(getPizzaData)
     const dispatch = useDispatch();
@@ -26,13 +35,13 @@ function PizaBlock({ imageUrl, title,  types, sizes, price, id }){
                 <h4 className='pizza-block__title'>{title}</h4>
                 <div className='pizza-block__selector'>
                     <ul>
-                        {types.map((typeId, i) => (
+                        {types.map((typeId: number, i: number) => (
                             <li key={typeId} onClick={() => {setActiveType(i)}} className={activeType === i ? 'active' : ''}>{typeNames[typeId]}</li>
                         ))}
                     </ul>
                     <ul>
                         {
-                            sizes.map((size, i) => (
+                            sizes.map((size: number, i: number) => (
                                 <li key={size} onClick={() => {setActiveSize(i)}} className={activeSize === i ? 'active' : ''}>{size} см.</li>
                             ))
                         }

@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import logoSvg from '../../src/assets/img/empty-cart.png'
 
-const EmptyCart = () => {
+const EmptyCart: React.FC = () => {
     return(
         <div className="content">
             <div className="container container--cart">

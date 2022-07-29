@@ -1,29 +1,27 @@
 import styles from './Search.module.scss'
 import {useCallback, useContext, useRef, useState} from "react";
 import debounce from 'lodash.debounce'
-import {SearchContext} from "../../App";
 import {useDispatch, useSelector} from "react-redux";
 import {setSearchBy} from "../redux/slices/filterSlice";
 
 const Search = () => {
-    // const { setSearchBy } = useContext(SearchContext);
     const [value, setValue] = useState('');
-    const inputRef = useRef();
+    const inputRef = useRef<HTMLInputElement>(null);
     const dispatch = useDispatch();
 
-    const onChangeValue = (event) => {
+    const onChangeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
-        changeInputValue(event)
+        changeInputValue(event);
     }
 
-    const changeInputValue = useCallback(debounce((event) => {
+    const changeInputValue = useCallback(debounce((event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setSearchBy(event.target.value));
     }, 1000), [])
 
     const onClickClear = () => {
         dispatch(setSearchBy(''));
         setValue('');
-        inputRef.current.focus();
+        inputRef.current?.focus();
     }
 
     return(
@@ -64,7 +62,7 @@ const Search = () => {
             <input
                 ref={inputRef}
                 value={value}
-                onChange={(event) => onChangeValue(event)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeValue(event)}
                 className={styles.input}
                 placeholder="Поиск пиццы..."
             />

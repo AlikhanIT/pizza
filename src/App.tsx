@@ -7,12 +7,10 @@ import {
 	Route,
 } from "react-router-dom";
 import Cart from "./pages/Cart";
-import { createContext } from "react";
 import MainLayout from "./layouts/MainLayout";
+import React from "react";
 
-export const SearchContext = createContext();
-
-function App() {
+const App: React.FC = () => {
 	return (
 		<Routes>
 			<Route path='/' element={<MainLayout />}>

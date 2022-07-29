@@ -3,8 +3,10 @@ import ReactPaginate from 'react-paginate';
 import {useDispatch, useSelector} from "react-redux";
 import {setCurrentPage} from "../redux/slices/filterSlice";
 import {getPizzaData} from "../redux/slices/pizzaSlice";
+import React from "react";
 
-const Pagination = () => {
+const Pagination: React.FC = () => {
+    // @ts-ignore
     const { currentPage } = useSelector(state => state.filterReducer)
     const { pageCount } = useSelector(getPizzaData)
     const dispatch = useDispatch();
@@ -21,7 +23,6 @@ const Pagination = () => {
                         onPageChange={(event) => dispatch(setCurrentPage(currentPage + 1))}
                         pageRangeDisplayed={4}
                         pageCount={Math.ceil(pageCount / 4)}
-                        renderOnZeroPageCount={null}
                     />
                 ) : ''
             }
