@@ -1,8 +1,9 @@
-import {useDispatch, useSelector} from "react-redux";
-import {getFilterData, setActiveCategory} from "../redux/slices/filterSlice";
+import {useDispatch} from "react-redux";
+import {setActiveCategory} from "../redux/slices/filterSlice";
+import React from "react";
 
-const Categories = () => {
-    const { activeCategory } = useSelector(getFilterData);
+export const Categories = React.memo(({value}: {value: number}) => {
+    const activeCategory = value;
     const dispatch = useDispatch();
     const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
@@ -17,6 +18,4 @@ const Categories = () => {
             </ul>
         </div>
     )
-}
-
-export default Categories
+})

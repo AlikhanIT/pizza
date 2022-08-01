@@ -4,10 +4,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {setCurrentPage} from "../redux/slices/filterSlice";
 import {getPizzaData} from "../redux/slices/pizzaSlice";
 import React from "react";
+import {RootState} from "../redux/store";
 
-const Pagination: React.FC = () => {
-    // @ts-ignore
-    const { currentPage } = useSelector(state => state.filterReducer)
+export const Pagination: React.FC = () => {
+    const { currentPage } = useSelector((state: RootState) => state.filterReducer)
     const { pageCount } = useSelector(getPizzaData)
     const dispatch = useDispatch();
 
@@ -29,5 +29,3 @@ const Pagination: React.FC = () => {
         </>
     )
 }
-
-export default Pagination

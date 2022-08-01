@@ -12,7 +12,7 @@ type PizzaItem = {
     price: number,
 }
 
-const PizaBlock: React.FC<PizzaItem> = ({ imageUrl, title,  types, sizes, price, id }) => {
+export const PizzaBlock: React.FC<PizzaItem> = ({ imageUrl, title,  types, sizes, price, id }) => {
     const [activeType, setActiveType] = useState<number>(0);
     const [activeSize, setActiveSize] = useState<number>(0);
     const itemCount = useSelector(getItemCount(id))
@@ -72,5 +72,3 @@ const PizaBlock: React.FC<PizzaItem> = ({ imageUrl, title,  types, sizes, price,
         </div>
     )
 }
-
-export default PizaBlock

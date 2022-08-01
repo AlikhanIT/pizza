@@ -1,12 +1,27 @@
 import logoSvg from '../../assets/img/pizza-logo.svg'
 import {Link, useLocation} from "react-router-dom";
-import Search from "../Search";
+import { Search } from "../index";
 import {useSelector} from "react-redux";
 import {getCartData} from "../redux/slices/cartSlice";
-import React from "react";
+import React, {useEffect, useRef} from "react";
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
     const { totalPrice, totalCount } = useSelector(getCartData);
+    const {items} = useSelector(getCartData);
+
+    const isMounted = useRef<boolean>(false);
+
+    useEffect(() => {
+        if(isMounted) {
+            const jsonItems = JSON.stringify(items);
+            const jsonTPrice = JSON.stringify(totalPrice);
+            const jsonTCount = JSON.stringify(totalCount);
+            localStorage.setItem('items', jsonItems);
+            localStorage.setItem('tPrice', jsonTPrice);
+            localStorage.setItem('tCount', jsonTCount);
+        }
+        isMounted.current = true;
+    }, [items, totalPrice, totalCount])
 
     const location = useLocation();
 
@@ -69,5 +84,3 @@ const Header: React.FC = () => {
         </div>
     )
 }
-
-export default Header

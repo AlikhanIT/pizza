@@ -1,13 +1,10 @@
-import Categories from "../components/Categories";
-import Sort, {sortList} from "../components/Sort";
-import Skeleton from "../components/PizzaBlock/Skeleton";
-import PizaBlock from "../components/PizzaBlock";
+import { Categories, Sort, Skeleton, PizzaBlock, Pagination, sortList } from '../components/index'
 import {useEffect, useRef } from "react";
-import Pagination from "../components/Pagination";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {getFilterData, setFilters, TypeOfNavigate} from "../components/redux/slices/filterSlice";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {fetchPizzas, getPizzaData} from "../components/redux/slices/pizzaSlice";
+import {RootState, useAppDispatch} from "../components/redux/store";
 
 type Item = {
     title: string,
@@ -24,7 +21,7 @@ const Home: React.FC = () => {
     const { items, isLoading } = useSelector(getPizzaData)
     const { activeCategory, sortProperties, currentPage, searchBy } = useSelector(getFilterData)
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
@@ -34,7 +31,6 @@ const Home: React.FC = () => {
 
     const getPizzas = () => {
         dispatch(
-            // @ts-ignore
             fetchPizzas({ activeCategory, searchBy, sortProperties, currentPage })
         )
         window.scrollTo(0, 0);
@@ -51,7 +47,7 @@ const Home: React.FC = () => {
         if(location.pathname !== '/') {
             const sort = sortList.find((obj) => obj.sortProp === params.sortProperty);
             if(sort){
-                const _params = { ...params, sortProperty: sort}
+                const _params = { ...params, sortProperty: sort};
                 dispatch(setFilters(_params as TypeOfNavigate));
             }
             isSearch.current = true;
@@ -67,14 +63,14 @@ const Home: React.FC = () => {
     }, [activeCategory, sortProperties, searchBy, currentPage])
 
     const skeletons = [...new Array(4)].map((_, index: number) => (<Skeleton key={index} />));
-    const pizzas = items.map((obj: Item) => (<PizaBlock key={obj.id} {...obj} />));
+    const pizzas = items.map((obj: Item) => (<PizzaBlock key={obj.id} {...obj} />));
 
     return(
         <>
             <div className="container">
                 <div className='content__top'>
-                    <Categories />
-                    <Sort />
+                    <Categories value={activeCategory} />
+                    <Sort sorts={useSelector((state: RootState) => state.filterReducer.sortProperties)} />
                 </div>
                 <h2 className='content__title'>Все пиццы</h2>
                 {isLoading === 'error' ? (

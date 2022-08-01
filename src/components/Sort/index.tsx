@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {setSortProperty, setSortMath, TypeOfSort} from "../redux/slices/filterSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 export const sortList: TypeOfSort[] = [{
     sortName: 'популяронсти',
@@ -19,11 +19,10 @@ export const sortList: TypeOfSort[] = [{
     sortMath: true
 }]
 
-const Sort = () => {
-    //@ts-ignore
-    const sortProps = useSelector(state => state.filterReducer.sortProperties);
+export const Sort = React.memo(({ sorts }: {sorts: TypeOfSort}) => {
+    const sortProps = sorts;
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
     const sortRef = useRef<HTMLDivElement>(null);
     let sortName = sortList[sortProps.activeProp].sortName;
 
@@ -76,6 +75,4 @@ const Sort = () => {
             }
         </div>
     )
-}
-
-export default Sort
+})

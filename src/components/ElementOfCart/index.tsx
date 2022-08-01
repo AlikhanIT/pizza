@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addPizzaInCart, minusPizza, clearPizzas, getItemCount, Items} from "../redux/slices/cartSlice";
 
-const ElementOfCart: React.FC<Items> = ({ id, imageUrl, title,  types, sizes, price }) => {
+export const ElementOfCart: React.FC<Items> = ({ id, imageUrl, title,  types, sizes, price }) => {
     const dispatch = useDispatch();
     const countOfItem = useSelector(getItemCount(id));
 
@@ -63,5 +63,3 @@ const ElementOfCart: React.FC<Items> = ({ id, imageUrl, title,  types, sizes, pr
         </div>
     )
 }
-
-export default ElementOfCart
